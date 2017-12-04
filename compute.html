@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap 101 Template</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>계산기</h1>
+        <form class="form-inline">
+            <p>임차보증금:<input v-model.number="l_deposit" placeholder="임차보증금" class="form-control"></p>
+            <p>대출금액:<input v-model.number="loan_atm" placeholder="대출금액" class="form-control"></p>
+            <p>만기일시상환금:<input v-model.number="s_loan_atm" placeholder="만기일시 상환금" class="form-control"></p>
+            <p>원리금상환금:<input v-model.number="p_loan_atm" placeholder="원리금 상환금" class="form-control"></p>
+            <p>대출기간:<input v-model.number="i_term" placeholder="대출기간" class="form-control"></p>
+            <p>대출금리:<input v-model.number="d_rate" placeholder="대출금리" class="form-control"></p>
+            <p>수익률:<input v-model.number="i_rate" placeholder=" 수익률" class="form-control"></p>
+            <p>국고채금리:<input v-model.number="n_rate" placeholder="국고채금리" class="form-control"></p>
+            <button type="submit" @click.prevent="calculate" class="btn btn-primary">계산</button>
+        </form>
+        <h2>Result</h2>
+        <p>반전세 보증금{{deposit}}</p>
+        <p>반전세 월세{{m_rent}}</p>
+        <ul class="list-group">
+            <li class="list-group" v-for="(value,index,key) in log1">
+                {{index+1}}{{key}}:{{value}}
+
+            </li>
+        </ul>
+        <ul class="list-group">
+            <li class="list-group" v-for="(value,index,key) in log2">
+                {{index+1}}{{key}}:{{value}}
+
+
+
+            </li>
+
+
+
+
+
+        </ul>
+
+
+
+
+
+
+        <pre>{{$data}}</pre>
+
+
+    </div>
+
+</body>
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script>
+    var vm = new Vue({
+        el: '.container',
+        data: {
+            l_deposit: 60000000, //임차보증금
+            loan_atm: 40000000, //대출금액
+            s_loan_atm: 30000000, //만기일시상환금
+            p_loan_atm: 10000000, //원리금 상환금
+            i_term: 24, //대출기간
+            d_rate: 4, //대출금리
+            i_rate: 3, //수익률
+            n_rate: 2, //국고채금리
+            s_m_repay_atm: null, //만기일시 상환금 월 이자액
+            p_m_repay_atm: null, //원리금균등 월 상환액(이자+원금)
+            s_m_rent: null, //만기일시 상환금에 대한 월세 계산
+            p_m_rent: null, //원리금 균등 상환에 대한 월세계산
+            log1: [], //log1 : 만기일시상환금에 대한 매월 이자 계산
+            log2: [] //log2: 원리금 상환금에 대한 원금+이자 계산
+        },
+        methods: {
+            calculate: function() {
+                this.s_m_repay_atm = (this.s_loan_atm) * (this.d_rate / 100) / 12; //만기일시 상환금 월 이자액
+                var s_loan_atm_diff = this.s_loan_atm - (this.s_loan_atm) * Math.pow(1 + (this.n_rate / 100) / 12, -this.i_term); //n개월 후 만기일시 상환금을 현재가치로 환산한 금액과 가치 차액  
+                this.s_m_rent = this.s_m_repay_atm + s_loan_atm_diff * (this.n_rate / 100) / 12 / (1 - Math.pow(1 + (this.n_rate / 100) / 12, -this.i_term)); //만기일시 상환금 월 이자액 + 가치 차액을 n개월 동안 납부할 금액으로 계산
+                this.p_m_repay_atm = (this.p_loan_atm) * (this.d_rate / 100) / 12 / (1 - Math.pow(1 + (this.d_rate / 100) / 12, -this.i_term)); //원리금 균등 월 상환액 (원금+이자)
+                var p_loan_atm_i = (this.p_loan_atm) * (this.i_rate / 100) / 12 / (Math.pow(1 + (this.i_rate / 100) / 12, this.i_term) - 1); //n개월 후 원리금 상환대출금액을 수익률i_rate%로 만들기 위한 월 납부액
+                this.p_m_rent = this.p_m_repay_atm - p_loan_atm_i; //원리금 균등 상환에 대한 월세 계산
+                //만기일시상환금에 대한 매월 이자
+                for (var j = 1; j <= this.i_term; j++) {
+                    this.log1.push({
+                        이자: this.s_m_repay_atm
+                    })
+                }
+
+
+
+
+
+
+                //원리금 상환 이자 계산
+                var d_m_int;
+                var d_m_or_atm;
+                var d_m_balance;
+                var d_bf_balance;
+                for (var i = 1; i <= this.i_term; i++) {
+                    if (i == 1) {
+                        d_m_int = this.p_loan_atm * (this.d_rate / 100) / 12; //이자
+                        d_m_or_atm = this.p_m_repay_atm - d_m_int; //원금
+                        d_m_balance = this.p_loan_atm - d_m_or_atm; // 잔금
+                        this.log2.push({
+                            이자: d_m_int,
+                            원금상환: d_m_or_atm
+                        }); //상환할 이자, 원금
+
+                    } else {
+                        d_m_int = d_bf_balance * (this.d_rate / 100) / 12; //이자
+                        d_m_or_atm = this.p_m_repay_atm - d_m_int; //원금
+                        d_m_balance = d_bf_balance - d_m_or_atm; //잔금
+                        this.log2.push({
+                            이자: d_m_int,
+                            원금상환: d_m_or_atm
+                        }); //상환할 이자, 원금
+
+                    }
+                    d_bf_balance = d_m_balance;
+
+
+                }
+
+            }
+
+        },
+        computed: {
+            m_rent: function() {
+                return this.s_m_rent + this.p_m_rent;
+            },
+            deposit: function() {
+                return this.l_deposit - this.loan_atm;
+            }
+
+        }
+    });
+</script>
+
+</html>
