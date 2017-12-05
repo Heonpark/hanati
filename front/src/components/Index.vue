@@ -65,24 +65,28 @@
     <input class="form-control" type="text" name="month_loan_period" placeholder="대출기간" v-model="month_loan_period"/>
     <!-- <input class="form-control" type="text" name="bank_id" placeholder="주거래은행을 선택하세요" v-model="bank_id"/> -->
     <select class="form-control" name="bank_id" onchange="selectedBox(this)" v-model="bank_id" id="selectbox">
-      <option value="0">하나은행</option>
-      <option value="1">신한은행</option>
-      <option value="2">우리은행</option>
-      <option value="3">국민은행</option>
-      <option value="4">농협</option>
-      <option value="5">기업은행</option>
+      <option value="1">하나은행</option>
+      <option value="2">신한은행</option>
+      <option value="3">우리은행</option>
+      <option value="4">국민은행</option>
+      <option value="5">농협</option>
+      <option value="6">기업은행</option>
     </select>
     <br><br>
     </div>
   <div class="col-xs-2" id="loanbuttons">
     <button class="btn btn-xl" @click="testing" id="btn_loanpage">확인[콘솔]</button>
     <button class="btn btn-xl" @click="testing" id="btn_loanpage">취소</button>
+
+<div>{{result}}</div>
+
   </div>
 </div>
 </template>
 
 <script>
 import AuthenticationService from '@/services/AuthenticationService'
+
 export default {
   data () {
     return {
@@ -94,7 +98,8 @@ export default {
       cus_loan: '',
       leasing_mortgage: '',
       month_loan_period: '',
-      bank_id: ''
+      bank_id: '',
+      result: AuthenticationService.result
     }
   },
   methods : {

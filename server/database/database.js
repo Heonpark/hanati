@@ -11,7 +11,8 @@ function connect(app) {
     console.log('connect() 호출됨');
     var connection = mysql.createPool({
         connectionLimit: 10,
-        host: 'localhost',
+        host:'localhost',
+        //'13.124.236.32', 
         user: 'root',
         password: '1234',
         port: '3306',
