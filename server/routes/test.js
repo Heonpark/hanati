@@ -53,8 +53,7 @@ var testpost = function (req, res) {
             if(rows){
                 console.dir(rows);
                 console.log('상품 추천 성공');
-                //res.json(rows);
-                res.redirect('/process/recommend');
+                res.json(rows);
                 
             }else{
                 console.log('상품 추천 실패');
