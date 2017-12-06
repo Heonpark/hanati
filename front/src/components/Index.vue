@@ -79,13 +79,13 @@
 
 
 <div>{{results[0]}}
-  {{results[0].loan_img}}
+  이미지 : {{loan_img}}
   <!-- <ul class="list-group">
   <li class="list-group-item" v-for: "result in results">
               {{result.loan_img}}
             </li>
   </ul> -->
-<img v-bind:src="results[0].loan_img" height="auto" width="auto">
+<img v-bind:src="loan_img" height="auto" width="auto">
 </div>
 
   </div>
@@ -110,8 +110,9 @@ export default {
       leasing_mortgage: '',
       month_loan_period: '',
       bank_id: '',
-      loan_img:'',
-      results: {}
+      // loan_img:'',
+      results: {},
+      loan_img: {}
     }
   },
   methods : {
@@ -130,7 +131,10 @@ export default {
  
       console.log(response.data)
       this.results = response.data
+      this.loan_img = response.data[0].loan_img;
       console.log(results)
+      console.log(response.data[0].loan_img)
+      
       return results
     }
   }
