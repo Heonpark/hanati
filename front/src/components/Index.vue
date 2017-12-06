@@ -78,7 +78,7 @@
     <button class="btn btn-xl" @click="testing" id="btn_loanpage">확인[콘솔]</button>
     <button class="btn btn-xl" @click="testing" id="btn_loanpage">취소</button>
 
-<div>{{result}}</div>
+<div>{{results[0]}}</div>
 
   </div>
 </div>
@@ -98,8 +98,9 @@ export default {
       cus_loan: '',
       leasing_mortgage: '',
       month_loan_period: '',
-      bank_id: '',
-      result: AuthenticationService.result
+      bank_id: '' ,
+      results: {}
+      // result: AuthenticationService.result
     }
   },
   methods : {
@@ -114,8 +115,13 @@ export default {
         leasing_mortgage : this.leasing_mortgage,
         month_loan_period : this.month_loan_period,
         bank_id : this.bank_id
+        
       })
+ 
       console.log(response.data)
+      this.results = response.data
+      console.log(results)
+      return results
     }
   }
 }
