@@ -56,8 +56,8 @@ var testpost = function(req, res) {
                 console.log('상품 추천 성공');
                 res.json(rows);
                 //res.send(rows);
-
             } else {
+
                 console.log('상품 추천 실패');
                 res.json({ error: '추천 상품이 없습니다. 다시 검색해주세요' });
             }
@@ -98,7 +98,7 @@ var recommendLoan = function(database, cus_age, cus_sex, repayment, repayment_mo
             ac_loan = cus_loan;
         }
         if (repayment = '0')
-            var exec = conn.query('select * from loan_goods as loan where loan.bank_id = ? and loan.month_loan_period_line >= ? and(loan.money_credit_line >= ? or loan.money_credit_line >= (loan.rate_credit_line * ?)) order by loan.avg_int_rat', [bank_id, month_loan_period, ac_loan, leasing_mortgage], function(err, result) {
+            var exec = conn.query('select * from loan_goods as loan where loan.loan_bank_id = ? and loan.month_loan_period_line >= ? and(loan.money_credit_line >= ? or loan.money_credit_line >= (loan.rate_credit_line * ?)) order by loan.avg_int_rat', [bank_id, month_loan_period, ac_loan, leasing_mortgage], function(err, result) {
                 conn.release();
                 console.log('실행 대상 SQL : ' + exec.sql);
                 if (err) {
@@ -111,7 +111,7 @@ var recommendLoan = function(database, cus_age, cus_sex, repayment, repayment_mo
                 callback(null, result);
             });
         else {
-            var exec = conn.query('select * from loan_goods as loan where loan.repayment = ? and loan.bank_id = ? and loan.month_loan_period_line >= ? and(loan.money_credit_line >= ? or loan.money_credit_line >= (loan.rate_credit_line * ?)) order by loan.avg_int_rat', [repayment, bank_id, month_loan_period, ac_loan, leasing_mortgage], function(err, result) {
+            var exec = conn.query('select * from loan_goods as loan where loan.repayment = ? and loan.loan_bank_id = ? and loan.month_loan_period_line >= ? and(loan.money_credit_line >= ? or loan.money_credit_line >= (loan.rate_credit_line * ?)) order by loan.avg_int_rat', [repayment, bank_id, month_loan_period, ac_loan, leasing_mortgage], function(err, result) {
                 conn.release();
                 console.log('실행 대상 SQL : ' + exec.sql);
                 if (err) {

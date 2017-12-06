@@ -42,7 +42,6 @@
     <br><br><br>
 </div>
 
-
 <div class="col-xs-2">
     <label class="customerlabel" for="ex1">상환금액</label>
     <label class="customerlabel" for="ex1">고객연봉</label>
@@ -54,12 +53,12 @@
     <input class="form-control" type="text" name="cus_loan" placeholder="대출금액" v-model="cus_loan"/><br><br><br>
 </div>
 
-
 <div class="col-xs-2">
     <label class="customerlabel" for="ex1">임차보증금</label>
     <label class="customerlabel" for="ex1">대출기간</label>
     <label class="customerlabel" for="ex1">거래은행</label>
 </div>
+
 <div class="col-xs-2">
     <input class="form-control" type="text" name="leasing_mortgage" placeholder="임차보증금" v-model="leasing_mortgage"/>
     <input class="form-control" type="text" name="month_loan_period" placeholder="대출기간" v-model="month_loan_period"/>
@@ -78,10 +77,21 @@
     <button class="btn btn-xl" @click="testing" id="btn_loanpage">확인[콘솔]</button>
     <button class="btn btn-xl" @click="testing" id="btn_loanpage">취소</button>
 
-<div>{{results[0]}}</div>
+
+<div>{{results[0]}}
+  {{results[0].loan_img}}
+  <!-- <ul class="list-group">
+  <li class="list-group-item" v-for: "result in results">
+              {{result.loan_img}}
+            </li>
+  </ul> -->
+<img v-bind:src="results[0].loan_img" height="auto" width="auto">
+</div>
 
   </div>
+
 </div>
+
 </template>
 
 <script>
@@ -90,6 +100,7 @@ import AuthenticationService from '@/services/AuthenticationService'
 export default {
   data () {
     return {
+      
       cus_age: '',
       cus_sex: '',
       repayment: '',
@@ -98,14 +109,14 @@ export default {
       cus_loan: '',
       leasing_mortgage: '',
       month_loan_period: '',
-      bank_id: '' ,
+      bank_id: '',
+      loan_img:'',
       results: {}
-      // result: AuthenticationService.result
     }
   },
   methods : {
     async testing() {
-      const response = await AuthenticationService.testpost({
+      const response = await AuthenticationService.testpost({ 
         cus_age : this.cus_age,
         cus_sex : this.cus_sex,
         repayment : this.repayment,
@@ -115,7 +126,6 @@ export default {
         leasing_mortgage : this.leasing_mortgage,
         month_loan_period : this.month_loan_period,
         bank_id : this.bank_id
-        
       })
  
       console.log(response.data)
